@@ -1,0 +1,19 @@
+{
+  "name": "spotify_shuffle",
+  "version": "1.0.0",
+  "description": "Node.js express server that allows user to play a song from any of their spotify playlists",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MawlSetz/SpotifyShuffle.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MawlSetz/SpotifyShuffle/issues"
+  },
+  "homepage": "https://github.com/MawlSetz/SpotifyShuffle#readme"
+}
