@@ -148,7 +148,11 @@ var playlists = [];
 app.get('/', function (req, res) {
 	var user_id = req.query.user_id || null;
 	var endpoint = '/v1/users/' + user_id + '/playlists'
-  res.send('GET request to the homepage');
+  res.send({
+  	'access_token': access_token,
+  	'user_id': user_id,
+  	
+  });
 });
 
 
