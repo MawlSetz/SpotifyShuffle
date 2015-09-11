@@ -1,0 +1,10 @@
+html
+  head
+    title= "SpotifyShuffle"
+    link(href='/public/styles.scss')
+    script(src='/app.js')
+  body
+    h1!= message
+    a(href='localhost:8888/login') Log In with Spotify
+    iframe(width='300', height='380', frameborder='0', src= 'https://embed.spotify.com/?uri=spotify:track:!{track}')
+	
