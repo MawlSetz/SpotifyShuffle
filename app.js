@@ -1,13 +1,7 @@
-// <!-- Express server framework -->
-var express = require('express');
-var app = express();
-var request = require('request');
+var express = require('express'); // Express web server framework
+var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
-
-
-// login with spotify
-
 
 var client_id = '42b90932c49944f48758b87b7b021f7e'; // Your client id
 var client_secret = '332388211e874073b6a42bdec032bb92'; // Your client secret
@@ -137,46 +131,6 @@ app.get('/refresh_token', function(req, res) {
     }
   });
 });
-
-
-
-
-// get list of playlists 
-// endpoint GET	/v1/users/{user_id}/playlists
-var playlists = [];
-// GET method route
-app.get('/', function (req, res) {
-	var user_id = req.query.user_id || null;
-	var endpoint = '/v1/users/' + user_id + '/playlists'
-  res.send({
-  	'access_token': access_token,
-  	'user_id': user_id,
-  	
-  });
-});
-
-
-	// url: 'http://api.spotify.com/v1/users/{user_id}/playlists',
-
-
-
-// get a playlists tracks
-// endpoint GET	/v1/users/{user_id}/playlists/{playlist_id}/tracks
-
-var user_id = req.query.user_id || null;
-playlist_id = req.query.playlist_id || null;
-
-
-
-
-
-// select track at random
-
-// select at random
-
-// play song
-//at end of song, play next
-
 
 console.log('Listening on 8888');
 app.listen(8888);
