@@ -1,17 +1,12 @@
-var express = require('express'); // Express web server framework
-var request = require('request'); // "Request" library
+// node modules
+var express = require('express');
+var request = require('request');
 var querystring = require('querystring');
-var cookieParser = require('cookie-parser');
 
 var client_id = '42b90932c49944f48758b87b7b021f7e'; // Your client id
 var client_secret = '332388211e874073b6a42bdec032bb92'; // Your client secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
-/**
- * Generates a random string containing numbers and letters
- * @param  {number} length The length of the string
- * @return {string} The generated string
- */
 var generateRandomString = function(length) {
   var text = '';
   var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -26,15 +21,42 @@ var stateKey = 'spotify_auth_state';
 
 var app = express();
 
-app.use(express.static(__dirname + '/public'))
-   .use(cookieParser());
+app.set('view engine', 'jade');
 
-app.get('/login', function(req, res) {
+app.get('/', function (req, res){
+  if (req.query.access_token){
+    var options = {
+      url: 'https://api.spotify.com/v1/users/setzerml/playlists',
+      headers: { 'Authorization': 'Bearer ' + req.query.access_token },
+      json: true
+    };
 
+    request.get(options, function(error, response, body) {
+      var max = body.total;
+      var randomPlaylist = Math.floor(Math.random() * (max - 1)) + 1;
+      var playlist_id = body.item[randomPlayList].id;
+
+      var options = {
+        url: 'https://api.spotify.com/v1/users/setzerml/playlists/' + playlist_id + '/tracks',
+          headers: { 'Authorization': 'Bearer ' + req.query.access_token },
+          json: true
+        };
+      request.get(options, function(error, response, body){
+        var howManyTracks = body.items.length;
+        var randomTrack = Math.floor(Math.random() * (howManyTracks - 1));
+        var trackId = body.items[randomTrack].track.id;
+
+        res.render('index', { title: 'tracks', track: trackId});
+      });
+    });
+  } else {
+    res.render('index', { title: 'Hey', message: 'Hello there!'});
+  }
+});
+
+app.get('/login', function(req, res){
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
-
-  // your application requests authorization
   var scope = 'user-read-private user-read-email';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
@@ -53,9 +75,9 @@ app.get('/callback', function(req, res) {
 
   var code = req.query.code || null;
   var state = req.query.state || null;
-  var storedState = req.cookies ? req.cookies[stateKey] : null;
+  // var storedState = req.cookies ? req.cookies[stateKey] : null;
 
-  if (state === null || state !== storedState) {
+  if (state === null) { // || state !== storedState) {
     res.redirect('/#' +
       querystring.stringify({
         error: 'state_mismatch'
@@ -81,19 +103,8 @@ app.get('/callback', function(req, res) {
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
-        var options = {
-          url: 'https://api.spotify.com/v1/me',
-          headers: { 'Authorization': 'Bearer ' + access_token },
-          json: true
-        };
-
-        // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {
-          console.log(body);
-        });
-
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
+        res.redirect('/?' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
@@ -134,3 +145,44 @@ app.get('/refresh_token', function(req, res) {
 
 console.log('Listening on 8888');
 app.listen(8888);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
